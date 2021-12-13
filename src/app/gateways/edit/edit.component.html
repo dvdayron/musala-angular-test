@@ -1,0 +1,115 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h2 class="h2">
+      {{isEditing ? 'Edit gateway' : 'Add gateway'}}
+    </h2>
+    <div *ngIf="isEditing" class="btn-toolbar mb-2 mb-md-0">
+      <div class="btn-group me-2">
+        <button (click)="delete()" type="button" class="btn btn-sm btn-danger">
+          {{'Remove gateway'}}
+        </button>
+      </div>
+    </div>
+</div>
+<div *ngIf="gateway" class="row pb-5">
+    <div class="col-12 mb-3 col-md-5">
+        <h4 class="pb-3 mb-3 border-bottom">{{'Details'}}</h4>
+        <form 
+            [formGroup]="gatewayForm"
+            class="needs-validation"
+            [ngClass]="{'was-validated': gatewayForm.invalid && gatewayForm.touched}"> 
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">{{'Serial Number'}}</label>
+                <input (blur)="isUnique()" type="text" required class="form-control" minlength="3" formControlName="serial_number" [(ngModel)]="gateway.serial_number"
+                [ngClass]="{'invalid': !isUniqueSerial}">
+                <div 
+                  *ngIf="!isUniqueSerial || (gatewayForm.controls['serial_number'].invalid && (gatewayForm.controls['serial_number'].dirty || gatewayForm.controls['serial_number'].touched))" 
+                  class="invalid-feedback">
+                  <span *ngIf="gatewayForm.controls['serial_number'].errors?.['required']">
+                    {{'Required field.'}}
+                  </span>
+                  <span *ngIf="gatewayForm.controls['serial_number'].errors?.['minlength']">
+                    {{'The minimum field length is 3 characters.'}}
+                  </span>
+                  <span *ngIf="!isUniqueSerial">
+                    {{'The serial number must be unique, please enter another.'}}
+                  </span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">{{'Name'}}</label>
+                <input type="text" required class="form-control" minlength="5" formControlName="name" [(ngModel)]="gateway.name">
+                <div 
+                  *ngIf="gatewayForm.controls['name'].invalid 
+                  && (gatewayForm.controls['name'].dirty || gatewayForm.controls['name'].touched)"  
+                  class="invalid-feedback">
+                  <span *ngIf="gatewayForm.controls['name'].errors?.['required']">
+                    {{'Required field.'}}
+                  </span>
+                  <span *ngIf="gatewayForm.controls['name'].errors?.['minlength']">
+                    {{'The minimum field length is 5 characters.'}}
+                  </span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">{{'IPv4 address (Example: 192.168.1.1)'}}</label>
+                <input type="text" class="form-control" formControlName="ip" required [(ngModel)]="gateway.ip" 
+                [ngClass]="{'invalid': gatewayForm.controls['ip'].invalid && (gatewayForm.controls['ip'].dirty || gatewayForm.controls['ip'].touched)}">
+                <div 
+                  *ngIf="gatewayForm.controls['ip'].invalid
+                  && (gatewayForm.controls['ip'].dirty || gatewayForm.controls['ip'].touched)" 
+                  class="invalid-feedback">
+                  <span *ngIf="gatewayForm.controls['ip'].errors?.['required']">
+                    {{'Required field.'}}
+                  </span>
+                  <span *ngIf="gatewayForm.controls['ip'].errors?.['pattern']">
+                    {{'Invalid ip address.'}}
+                  </span>
+                </div>
+            </div>
+            <button 
+              type="submit" 
+              class="btn btn-success" 
+              [disabled]="gatewayForm.invalid || !isUniqueSerial"
+              (click)="save()">
+              {{isEditing ? 'Update' : 'Save'}}
+            </button>
+        </form>
+    </div>
+    <div class="col-12 col-md-7 col-lg-5 offset-lg-1">
+        <h4 *ngIf="gateway.devices" class="pb-3 mb-3 border-bottom">
+          {{'Devices list'}} ({{gateway.devices.length}})
+        </h4>
+        <table 
+          *ngIf="gateway.devices && gateway.devices.length"
+          class="table table-hover">
+          <tr>
+            <th>UID</th>
+            <th>Vendor</th>
+            <th>Status</th>
+            <th>Created at</th>
+            <th></th>
+          </tr>
+          <tr *ngFor="let device of gateway.devices; let i = index">
+            <td>{{device.uid}}</td>
+            <td>{{device.vendor}}</td>
+            <td><div class="badge bg-{{device.status === 'Online' ? 'success' : 'secondary'}}">{{device.status}}</div></td>
+            <td>{{device.created_date}}</td>
+            <td class="d-flex justify-content-end caption">
+              <button (click)="editDevice(i)" class="btn btn-primary bg-primary m-1">
+                {{'Edit'}}
+              </button>
+              <button (click)="removeDevice(i)" class="btn btn-sm btn-danger bg-danger m-1">
+                {{'Delete'}}
+              </button>
+            </td>
+          </tr>
+        </table>
+        <a *ngIf="!currentDevice && (gateway.devices && gateway.devices.length < 10)" (click)="addDevice()" class="text-decoration-underline">{{'Add device'}}</a>
+        <device-edit 
+            *ngIf="currentDevice" 
+            [device]="currentDevice"
+            (onCancel)="closeDeviceForm()"
+            (onSave)="saveDevice($event)">
+        </device-edit>
+    </div>
+</div>

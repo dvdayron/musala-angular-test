@@ -1,0 +1,70 @@
+.app-loading {
+    position: fixed;
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,.05);
+    opacity: 0;
+    -moz-transition: all .3s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+    -webkit-transition: all .3s ease-in-out;
+    -ms-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+    .spinner {
+        height: 50px;
+        width: 50px;
+    }
+    &.o {
+        z-index: 999;
+        display: flex;
+        opacity: 1;
+    }
+}
+
+/* spinner */
+
+.spinner {
+    animation: rotator 1.4s linear infinite;
+}
+
+@keyframes rotator {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(270deg); }
+}
+  
+.path {
+    stroke-dasharray: 187;
+    stroke-dashoffset: 0;
+    transform-origin: center;
+    animation:
+    dash 1.4s ease-in-out infinite, 
+    colors 5.6s ease-in-out infinite;
+}
+  
+@keyframes colors {
+    0% { stroke: blue; }
+    25% { stroke: blue; }
+    50% { stroke: blue; }
+    75% { stroke: blue; }
+    100% { stroke: blue; }
+}
+  
+@keyframes dash {
+   0% { stroke-dashoffset: 187; }
+   50% {
+     stroke-dashoffset: 46.75;
+     transform:rotate(135deg);
+   }
+   100% {
+     stroke-dashoffset: 187;
+     transform:rotate(450deg);
+   }
+}

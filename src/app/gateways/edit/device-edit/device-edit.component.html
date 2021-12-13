@@ -1,0 +1,61 @@
+<div *ngIf="device">
+    <h4 class="pb-3 mb-3 border-bottom">
+        {{device.created_date ? 'Edit device' : 'Add device'}}
+    </h4>
+    <form
+    [formGroup]="deviceForm">
+        <div class="row">
+            <div class="col-4">
+                <div>
+                    <input 
+                        type="text" 
+                        class="form-control form-control-sm" 
+                        [placeholder]="'UID'" 
+                        [(ngModel)]="device.uid"
+                        formControlName="uid"
+                    >
+                </div>
+            </div>
+            <div class="col-5">
+                <div>
+                    <input 
+                        type="text" 
+                        class="form-control form-control-sm" 
+                        [placeholder]="'Vendor'" 
+                        [(ngModel)]="device.vendor"
+                        formControlName="vendor"
+                    >
+                </div>
+            </div>
+            <div class="col-3">
+                <div>
+                    <select 
+                        [(ngModel)]="device.status"
+                        class="form-control form-control-sm"
+                        formControlName="status">
+                        <option [value]="'Online'">{{'Online'}}</option>
+                        <option [value]="'Offline'">{{'Offline'}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-3">
+                <button 
+                    type="submit" 
+                    class="btn btn-success btn-sm form-control form-control-sm" 
+                    [disabled]="deviceForm.invalid"
+                    (click)="save()">
+                    {{device.created_date ? 'Update' : 'Save'}}
+                </button>
+            </div>
+            <div class="col-3">
+                <button
+                    class="btn btn-outline-secondary btn-sm form-control form-control-sm"
+                    (click)="cancel()">
+                    {{'Cancel'}}
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
