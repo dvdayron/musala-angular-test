@@ -25,6 +25,6 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 https://github.com/dvdayron/musala-angular-test/
 
-## Versel deployment
+## Vercel deployment
 
 https://musala-angular-frontend.vercel.app/
